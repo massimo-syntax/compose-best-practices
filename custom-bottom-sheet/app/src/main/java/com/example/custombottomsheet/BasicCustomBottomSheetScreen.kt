@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicCustomBottomSheetScreen() {
+fun BasicCustomizedBottomSheetScreen() {
 
     val sheetState = rememberCustomSheetState()
     val scope = rememberCoroutineScope()
@@ -48,7 +48,7 @@ fun BasicCustomBottomSheetScreen() {
         }
 
         if(showBottomSheet){
-            CustomBottomSheet({showBottomSheet = false}) {
+            CustomizedBottomSheet({showBottomSheet = false}) {
                 Spacer(Modifier.height(200.dp))
                 Button(onClick = {
                     scope.launch {
@@ -84,7 +84,7 @@ fun rememberCustomSheetState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomBottomSheet(
+fun CustomizedBottomSheet(
     onDismiss: () -> Unit,
     sheetState: SheetState = rememberModalBottomSheetState(),
     content: @Composable ColumnScope.() -> Unit
