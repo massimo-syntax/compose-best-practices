@@ -1,5 +1,6 @@
 package com.example.simpleanimations.ui.screens
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateContentSize
@@ -16,11 +17,15 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +39,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -56,14 +63,18 @@ import com.example.simpleanimations.ui.components.ListItemSquare
 import com.example.simpleanimations.ui.components.ListItemWide
 import com.example.simpleanimations.ui.components.ThinButton
 import com.example.simpleanimations.ui.components.TitleGradient
+import com.example.simpleanimations.ui.theme.AccentGradient2
 import com.example.simpleanimations.ui.theme.CoolGray
 import com.example.simpleanimations.ui.theme.Emerald
 import com.example.simpleanimations.ui.theme.OceanBlue
+import com.example.simpleanimations.ui.theme.Secondary
 import com.example.simpleanimations.ui.theme.Teal
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
@@ -90,6 +101,7 @@ fun SimplestAnimationsShowcase() {
         SequentialAnimations()
         ConcurrentAnimations()
         TransitionExampleConcurrent()
+        AnimatedContent()
     }
 }
 
@@ -377,10 +389,7 @@ fun ConcurrentAnimations() {
 
 enum class SomeState{
     Initial,
-    Done,
-    Loading,
-    Loaded,
-    Error
+    Done
 }
 
 @Composable
@@ -393,7 +402,6 @@ fun TransitionExampleConcurrent() {
         when(state){
             SomeState.Initial -> 0.dp
             SomeState.Done -> 4.dp
-            else -> 0.dp
         }
     }
 
@@ -401,7 +409,6 @@ fun TransitionExampleConcurrent() {
         when(state){
             SomeState.Initial -> CoolGray
             SomeState.Done -> Teal
-            else -> Emerald
         }
     }
 
@@ -428,6 +435,108 @@ fun TransitionExampleConcurrent() {
             }
         )
     }
+}
+
+enum class UiState{
+    Loading,
+    Loaded,
+    Error
+}
+
+@Composable
+fun AnimatedContent(){
+    var state by remember {
+        mutableStateOf(UiState.Loading)
+    }
+
+    Column{
+        AnimatedContent(
+            state,
+            transitionSpec = {
+                fadeIn(
+                    animationSpec = tween(1000)
+                ) togetherWith fadeOut(animationSpec = tween(1000))
+            },
+            label = "Animated Content"
+        ) { targetState ->
+            when (targetState) {
+                UiState.Loading -> {
+                    LoadingScreen()
+                }
+                UiState.Loaded -> {
+                    LoadedScreen()
+                }
+                UiState.Error -> {
+                    ErrorScreen()
+                }
+            }
+        }
+        Row{
+            ThinButton(
+                onClick = {
+                    state = UiState.Loading
+                },
+                text = UiState.Loading.name
+            )
+            ThinButton(
+                onClick = {
+                    state = UiState.Loaded
+                },
+                text = UiState.Loaded.name
+            )
+            ThinButton(
+                onClick = {
+                    state = UiState.Error
+                },
+                text = UiState.Error.name
+            )
+        }
+    }
+
+}
+@Composable
+fun LoadingScreen(){
+
+    val loading = arrayOf("Loading", "Loading.", "Loading..", "Loading...")
+    var state by remember { mutableStateOf("Loading...") }
 
 
+    LaunchedEffect(Unit){
+        var i = 0
+        while (true){
+            delay(500.milliseconds)
+            state = loading[i % loading.size]
+            i++
+        }
+    }
+
+    Text(
+        text = state,
+        color = Emerald,
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun LoadedScreen(){
+    ListItemWide(
+        "Content Loaded!",
+        "Content is in status: Loaded"
+    )
+}
+
+@Composable
+fun ErrorScreen(){
+
+    Text(
+        text = "ERROR",
+        color = Secondary,
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
