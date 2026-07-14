@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- that has to be canceled,
+    <style name="Theme.SomeSplashScreenThemeNameOrWhatever" parent="android:Theme.Material.Light.NoActionBar" />
+    -->
+    <!-- and replaced with `````v somename"     parent="Theme.SplashScreen" -->
+    <style name="Theme.MySplashScreenTheme"     parent="Theme.SplashScreen">
+        <!-- or some color -->
+        <item name="windowSplashScreenBackground">@color/ic_launcher_splash_background</item>
+        <!-- that was the previous theme above-->
+        <item name="postSplashScreenTheme">@style/android:Theme.Material.Light.NoActionBar</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_splash_foreground</item>
+
+    </style>
+
+
+</resources>
