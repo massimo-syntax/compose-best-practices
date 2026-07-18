@@ -5,56 +5,43 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
-import com.example.notificationsadvanced.R
+import androidx.lifecycle.viewModelScope
+import com.example.notificationsadvanced.di.BaseNotificationBuilder
+import com.example.notificationsadvanced.notification.notificationSource.NotificationSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlin.random.Random
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    @BaseNotificationBuilder
     private val notificationBuilder: NotificationCompat.Builder,
-    private val notificationManager: NotificationManagerCompat
+    val notificationManager: NotificationManagerCompat,
+    private val notificationSource: NotificationSource
 ) : ViewModel() {
 
-    private var notificationIds = mutableListOf<Int>()
-    private val newNotificationId = {
-        val id = Random.nextInt()
-        notificationIds.add(id)
-        id
-    }
-
-    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun showSimpleNotification(){
-        notificationManager.notify(newNotificationId(),notificationBuilder.build())
-    }
-
-    // from now on the notifications have this title
-    // the builder is modified
-    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun updateNotification(title:String = "Title From MainViewModel"){
-        notificationManager.notify(
-            newNotificationId(),
-            notificationBuilder
-                .setContentTitle(title)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .build()
+    val permissionGranted = notificationSource.permissionFlow
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            false
         )
-    }
+
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun newNotificationsAlsoInLockScreen(){
-        notificationManager.notify(
-            newNotificationId(),
-            notificationBuilder
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .build()
-        )
-    }
+    fun showSimpleNotification() = notificationSource.reminderNotificationNoAction()
 
-    fun cancelOldestNotification(){
-        if(notificationIds.isEmpty()) return
-        notificationManager.cancel( notificationIds.first() )
-        notificationIds.removeFirstOrNull()
-    }
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun privateNotification() = notificationSource.privateReminderNotification()
+
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun notificationToActivity() = notificationSource.notificationToActivity()
+
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun broadcastReceiverNotification() =
+        notificationSource.notificationBroadcastReceiver()
+
+    fun cancelOldestNotification() = notificationSource.cancelOldestNotification()
 
 }
