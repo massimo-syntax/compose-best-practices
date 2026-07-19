@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-
+    <!-- work manager -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -20,17 +22,25 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.DeepLinksBasics"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter android:launchMode="singleTop">
+            <!-- default activity -->
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- deep linking -->
+            </intent-filter>
+
+
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="myapp" />
-                <data android:host="order" />
+                <data android:scheme="https" />
+                <data android:host="www.example.com" />
+                <data android:pathPrefix="/content" />
+                <data android:pathPrefix="/profile" />
             </intent-filter>
+
+
+
         </activity>
     </application>
 
