@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".HiltWorkMangerApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -28,10 +29,17 @@
 
         <!-- to add a custom configuration to modify WorkManager's logging level for debug builds. -->
         <!-- as now the whole app is a debug build so is not really needed -->
+
         <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
-            tools:node="remove" />
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="com.example.workmanager.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
 
 

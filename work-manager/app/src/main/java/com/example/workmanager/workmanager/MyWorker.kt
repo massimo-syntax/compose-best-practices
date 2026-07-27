@@ -1,8 +1,7 @@
-package com.example.workmanager
+package com.example.workmanager.workmanager
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.delay
@@ -32,5 +31,3 @@ class MyWorker(
         }
     }
 }
-
-
