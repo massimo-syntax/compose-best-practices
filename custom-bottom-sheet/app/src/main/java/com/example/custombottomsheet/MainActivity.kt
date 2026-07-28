@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-
 import com.example.custombottomsheet.ui.theme.CustomBottomSheetTheme
 
 
@@ -18,7 +17,8 @@ class MainActivity : ComponentActivity() {
                 //BasicCustomBottomSheetScreen()
                 //BottomSheetWithPeekHeightScreen()
                 //BasicCustomizedBottomSheetScreen()
-                SlideCustomColumnScreen()
+                //SlideCustomColumnScreen()
+                FloatingIconBottomSheet()
             }
         }
     }
