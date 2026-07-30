@@ -13,13 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.permissions.permissionstateLaunchpermissionrequest.Column
 
 @Composable
 fun ContextCompatCheckSelfPermission() {
@@ -36,6 +35,7 @@ fun ContextCompatCheckSelfPermission() {
         )
     }
 
+    // this does never change
     val showRationale by remember {
         mutableStateOf(
             ActivityCompat.shouldShowRequestPermissionRationale(
@@ -61,6 +61,7 @@ fun ContextCompatCheckSelfPermission() {
         Modifier.statusBarsPadding()
     ) {
         // user denied once, does not even work..
+        // maybe a "callback" in rememberLauncherForActivityResult
         if (showRationale) {
             Text("please allow permission, is required..")
         }

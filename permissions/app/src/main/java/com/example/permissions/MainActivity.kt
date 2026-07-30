@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import com.example.permissions.activityresultcontract.MultiplePermissionsActivityResultContract
+import com.example.permissions.activityresultcontract.SinglePermissionActivityResultContract
 import com.example.permissions.contextcompatCheckselfpermission.ContextCompatCheckSelfPermission
 import com.example.permissions.permissionstateLaunchpermissionrequest.CameraLaunchPermissionRequest
 import com.example.permissions.permissionstateLaunchpermissionrequest.MultipleLocationPermissionsLaunchPermissionRequest
@@ -23,12 +25,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PermissionsTheme {
+                // pretty...
                 // CameraLaunchPermissionRequest()
                 // NotificationLaunchPermissionRequest_FromApiVersionTiramisu()
                 // MultipleLocationPermissionsLaunchPermissionRequest()
                 // MultiplePermissionsLaunchPermissionRequest()
-                MultiplePermissionsLaunchPermissionRequest()
-                // ContextCompatCheckSelfPermission() // there is better
+                // MultiplePermissionsLaunchPermissionRequest()
+
+                // there is better
+                // ContextCompatCheckSelfPermission()
+
+                // this is yet better
+                // SinglePermissionActivityResultContract()
+                // MultiplePermissionsActivityResultContract()
             }
         }
     }
