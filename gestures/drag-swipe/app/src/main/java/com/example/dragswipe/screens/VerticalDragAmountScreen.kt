@@ -1,4 +1,4 @@
-package com.example.dragswipe.ui.screens
+package com.example.dragswipe.screens
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation

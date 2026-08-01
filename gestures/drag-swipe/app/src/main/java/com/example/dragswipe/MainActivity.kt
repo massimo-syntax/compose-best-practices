@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.dragswipe.ui.screens.SwipeHorizontallyScreen
-import com.example.dragswipe.ui.screens.VerticalDragAmountScreen
+import com.example.dragswipe.screens.SwipeToCancel
 import com.example.dragswipe.ui.theme.DragSwipeTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +14,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             DragSwipeTheme {
                 // VerticalDragAmountScreen()
-                SwipeHorizontallyScreen()
+                // SwipeHorizontallyScreen()
+                SwipeToCancel()
             }
         }
     }
