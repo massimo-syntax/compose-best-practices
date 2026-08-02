@@ -26,3 +26,14 @@ val OceanBlue = Color(0xFF2563EB)
 val CoolGray = Color(0xFF64748B)
 val Emerald = Color(0xFF10B981)
 val SkyBlue = Color(0xFF38BDF8)
+
+
+
+val Amber600 = Color(0xFFFFB300)
+
+val Melon = Color(0xFFfec5bb)
+val PaleDogwood = Color(0xFFfcd5ce)
+val Seashell = Color(0xFFf8edeb)
+val Peach = Color(0xFFfec89a)
+val Green = Color(0xFFd8e2dc)
+val GreenLight = Color(0xFFEBF1EE)

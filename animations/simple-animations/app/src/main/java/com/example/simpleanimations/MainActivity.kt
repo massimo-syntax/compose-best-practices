@@ -4,16 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.simpleanimations.ui.screens.MoreComplexAnimations_AnimationStatus
-import com.example.simpleanimations.ui.screens.SimplestAnimationsShowcase
+import com.example.simpleanimations.ui.screens.UsefulAnimationsInOneScreen
 import com.example.simpleanimations.ui.theme.SimpleAnimationsTheme
+import com.louis.composeplayground.ui.Custom
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +15,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             SimpleAnimationsTheme {
                 // SimplestAnimationsShowcase()
-                MoreComplexAnimations_AnimationStatus()
+                // UsefulAnimationsInOneScreen()
+                //CustomTabRow()
+                Custom()
             }
         }
     }
