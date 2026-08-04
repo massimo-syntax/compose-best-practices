@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.state_layout.ui.theme.State_LayoutTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -13,7 +14,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             State_LayoutTheme {
                 // OnGloballyPositioned()
-                CenterItemOnScroll()
+                // CenterItemOnScroll()
+                // ScopedRecomposition()
+                SmartComposition()
             }
         }
     }

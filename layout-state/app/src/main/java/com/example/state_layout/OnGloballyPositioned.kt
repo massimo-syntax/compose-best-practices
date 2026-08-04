@@ -60,13 +60,6 @@ data class GloballyPositionedData(
     val boundsInWindow:Rect
 )
 
-
-data class dotOffset(
-    val x: Float = 10f,
-    val y: Float = 100f
-)
-
-
 @Composable
 fun OnGloballyPositioned(){
 
@@ -81,7 +74,6 @@ fun OnGloballyPositioned(){
 
     val scope = rememberCoroutineScope()
 
-
     var dotX by remember{ mutableFloatStateOf(0f) }
     var dotY by remember{ mutableFloatStateOf(0f) }
 
@@ -89,7 +81,6 @@ fun OnGloballyPositioned(){
     var animateDotY = animateFloatAsState(dotY)
 
     var someOffsetTop by remember{ mutableFloatStateOf(0f) }
-
 
     // dot
     Box() {
@@ -110,7 +101,6 @@ fun OnGloballyPositioned(){
         Modifier.statusBarsPadding().fillMaxSize().border(1.dp, Color.Cyan),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
         Text("Parent..")
         Surface(
             Modifier.size(100.dp),
@@ -139,8 +129,6 @@ fun OnGloballyPositioned(){
         }
 
     }
-
-
 
 
 }
