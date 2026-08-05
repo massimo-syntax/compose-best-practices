@@ -1,8 +1,6 @@
 package com.example.state_layout
 
 import androidx.compose.runtime.Composable
-
-
 import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
@@ -15,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf

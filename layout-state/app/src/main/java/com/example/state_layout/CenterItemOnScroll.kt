@@ -33,12 +33,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,10 +73,12 @@ fun CenterItemOnScroll() {
             Column(
                 Modifier.height(screenHeight)
             ) {
+
                 SecondaryTabRow(
                     selectedTabIndex = tabState.ordinal,
-                    indicator = { TabIndicator(tabState.ordinal) }
-                ) {
+                    indicator = { TabIndicator(tabState.ordinal) },
+
+                    ) {
                     Tabs.entries.forEach {
                         Tab(
                             selected = tabState.ordinal == it.ordinal,
@@ -89,6 +94,7 @@ fun CenterItemOnScroll() {
                     }
                 }
 
+
                 when (tabState) {
                     Tabs.Home -> TabHome()
                     Tabs.Products -> TabProducts()
@@ -98,8 +104,6 @@ fun CenterItemOnScroll() {
             }
         }
     }
-
-
 }
 
 
@@ -111,7 +115,31 @@ fun TabIndicatorScope.TabIndicator(selectedTabIndex: Int) {
             .tabIndicatorOffset(selectedTabIndex, matchContentSize = true)
             .padding(vertical = 8.dp)
             .fillMaxHeight()
-            .zIndex(-.1f),
+            .zIndex(-.1f)
+            .layout { measurable: Measurable, constraints: Constraints ->
+                // from parent constraints,
+                // have min- max- width 40 dp more
+                val placeable = measurable.measure(
+                    constraints.copy(
+                        minWidth = constraints.maxWidth + 20.dp.roundToPx(),
+                        maxWidth = constraints.maxWidth + 20.dp.roundToPx()
+                    )
+                )
+                // be sure that the container does not expand
+                val layoutWidth =
+                    placeable.width.coerceIn(constraints.maxWidth, constraints.maxWidth)
+
+                // nor in height
+                val layoutHeight =
+                    placeable.height.coerceIn(constraints.minHeight, constraints.maxHeight)
+
+                layout(layoutWidth, layoutHeight) {
+                    //          [++]        - [++++] =   [--[ / 2 = [-[++]
+                    val xPos = (layoutWidth - placeable.width) / 2
+                    //                          [-[++]+]
+                    placeable.placeRelative(xPos, 0)
+                }
+            },
         color = Color.LightGray,
         shape = RoundedCornerShape(10.dp),
 
@@ -130,7 +158,8 @@ fun TabHome() {
 
     val imageSize = 120.dp
     val density = LocalDensity.current
-    val imageSizePx = with(density){ imageSize.toPx() }
+    val imageSizePx = with(density) { imageSize.toPx() }
+    var placed by remember { mutableStateOf(false) }
 
     if (items.isEmpty()) {
 
@@ -167,14 +196,15 @@ fun TabHome() {
                                     "offsetY: $offsetY"
 
                     }
-
+                    placed = true
                 }
                 .offset {
                     IntOffset(offsetX.toInt(), offsetY.toInt())
                 },
 
-        ) {
-
+            ) {
+            // or it jumps to the position after the 1st frames
+            if(!placed) return@Column
             Image(
                 painter = painterResource(R.drawable.ic_launcher_foreground),
                 contentDescription = "empty state",
@@ -187,6 +217,7 @@ fun TabHome() {
                     fontSize = 10.sp,
                 ),
             )
+
         }
     } else {
     }// lazyColumn or else

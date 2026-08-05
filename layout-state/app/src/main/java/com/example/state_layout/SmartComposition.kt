@@ -1,6 +1,5 @@
 package com.example.state_layout
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,17 +17,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlin.random.Random
 
-fun getRandomColor() =  Color(
-    red = Random.nextInt(256),
-    green = Random.nextInt(256),
-    blue = Random.nextInt(256),
-    alpha = 255
-)
 
 @Composable
 fun SmartComposition(){
