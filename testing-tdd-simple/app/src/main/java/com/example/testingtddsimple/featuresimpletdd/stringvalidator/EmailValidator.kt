@@ -1,4 +1,4 @@
-package com.example.testingtddsimple.stringvalidator
+package com.example.testingtddsimple.featuresimpletdd.stringvalidator
 
 object EmailValidator {
     fun isEmailValid(email: String) =

@@ -1,4 +1,4 @@
-package com.example.testingtddsimple.calculations
+package com.example.testingtddsimple.featuresimpletdd.calculations
 
 class Calculator {
     fun add(a: Int, b: Int): Int = a+b

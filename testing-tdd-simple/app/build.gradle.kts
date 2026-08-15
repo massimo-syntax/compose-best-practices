@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.androidTestImplementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -44,6 +46,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -51,4 +54,14 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    // mockk
+    testImplementation("io.mockk:mockk-jvm:1.14.11")
+    // unit
+    // testImplementation("io.mockk:mockk-android:1.14.11")
+    // testImplementation("io.mockk:mockk-agent:1.14.11")
+    // instrumented
+    // androidTestImplementation ("io.mockk:mockk-android:1.14.11")
+    // androidTestImplementation ("io.mockk:mockk-agent:1.14.11")
+
 }

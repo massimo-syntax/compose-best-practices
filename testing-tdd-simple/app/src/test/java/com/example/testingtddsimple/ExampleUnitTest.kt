@@ -1,7 +1,6 @@
 package com.example.testingtddsimple
 
 import org.junit.Test
-
 import org.junit.Assert.*
 
 class ExampleUnitTest {

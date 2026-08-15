@@ -1,6 +1,6 @@
 package com.example.testingtddsimple
 
-import com.example.testingtddsimple.calculations.Calculator
+import com.example.testingtddsimple.featuresimpletdd.calculations.Calculator
 import org.junit.Assert
 import org.junit.Test
 

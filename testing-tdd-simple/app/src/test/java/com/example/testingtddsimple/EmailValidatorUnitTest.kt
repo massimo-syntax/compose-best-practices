@@ -1,6 +1,6 @@
 package com.example.testingtddsimple
 
-import com.example.testingtddsimple.stringvalidator.EmailValidator
+import com.example.testingtddsimple.featuresimpletdd.stringvalidator.EmailValidator
 import org.junit.Assert
 import org.junit.Test
 

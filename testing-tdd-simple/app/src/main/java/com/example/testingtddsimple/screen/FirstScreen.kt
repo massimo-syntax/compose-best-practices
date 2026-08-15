@@ -23,7 +23,7 @@ fun FirstScreen(){
         Text("What is not ui tests, or integration tests, which belong to AndroidTest folder, is in Test folder")
         Text("Unit testing are much faster than integration or ui testing, so is a good choice to have many of them rather than ui or integration tests, when feasible")
         Text("Arrange Act Assert: Arrange -> prepare all classes & or dependencies, Act -> take all results of the functions, Assert -> assert that the functions are working as expected")
-        Text("")
+        Text("Stub, are fake values created per hand, Mocking with Mockk has more functionality in it")
         Text("")
         Text("")
     }
