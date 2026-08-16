@@ -53,6 +53,7 @@ class GetUserNameUseCaseUnitTest {
         // Arrange
         val repository = mockk<UserRepository>()
         // return Result.success("John Doe") every time that UserRepository is called
+        // co every should actually start coroutines, or suspend functions
         coEvery { repository.getUserName() } returns Result.success("John Doe")
         val useCase = GetUserNameUseCase(repository)
         // Act

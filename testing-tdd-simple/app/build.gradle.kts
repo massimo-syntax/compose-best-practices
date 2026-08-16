@@ -55,6 +55,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    // runTest {}
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
     // mockk
     testImplementation("io.mockk:mockk-jvm:1.14.11")
     // unit
