@@ -7,4 +7,5 @@ interface StringsListRepository {
     suspend fun reset()
     suspend fun saveStringsInDb()
     suspend fun loadStringsFromNetwork(/*callback: ()->Unit*/)
+    suspend fun loadFromNetworkWithCallback(callback: suspend (String)->Unit)
 }

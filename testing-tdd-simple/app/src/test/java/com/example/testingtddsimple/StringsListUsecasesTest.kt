@@ -1,23 +1,30 @@
 package com.example.testingtddsimple
 
 import com.example.testingtddsimple.featuremockk.AddStringUseCase
+import com.example.testingtddsimple.featuremockk.DecorateStringUseCase
 import com.example.testingtddsimple.featuremockk.EncryptStrings
 import com.example.testingtddsimple.featuremockk.EncryptStringsUseCase
 import com.example.testingtddsimple.featuremockk.LoadFromNetworkAndSaveLocallyUseCase
+import com.example.testingtddsimple.featuremockk.NetworkCallbackUseCase
 import com.example.testingtddsimple.featuremockk.RemoveAllUseCase
 import com.example.testingtddsimple.featuremockk.RemoveStringUseCase
+import com.example.testingtddsimple.featuremockk.StringDecorator
 import com.example.testingtddsimple.featuremockk.StringsListRepository
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.coVerifySequence
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkConstructor
 import io.mockk.mockkObject
+import io.mockk.unmockkConstructor
 import io.mockk.verify
 import io.mockk.verifyOrder
 import io.mockk.verifySequence
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 class StringsListUsecasesTest {
@@ -122,6 +129,50 @@ class StringsListUsecasesTest {
         encryptStringsUseCase()
 
         coVerify(exactly = 1) { repository.getStrings() }
+
+        clearMocks(repository, EncryptStrings)
+
+    }
+
+    @Test
+    fun `when decorating string should return decorated string`(){
+        val repository = mockk<StringsListRepository>()
+        val decorateStringUseCase= DecorateStringUseCase(repository)
+        val myString = "dlkfjasldfj"
+        mockkConstructor(StringDecorator::class)
+
+        // function used in the use case
+        every { repository.getStrings() } returns listOf(myString, myString)
+        every { anyConstructed<StringDecorator>().decorateString(any()) } returns "alksj"
+
+        val result = decorateStringUseCase()
+
+        Assert.assertEquals("alksj", result)
+        // free()
+        unmockkConstructor(StringDecorator::class)
+        clearMocks(repository)
+    }
+
+    @Test
+    fun `when function with callback is called, callback is mocked`() = runTest {
+        val repository = mockk<StringsListRepository>()
+        val withCallbackUseCase = NetworkCallbackUseCase(repository)
+        val myNetworkResponse = "hello, some network data or message"
+
+        coEvery { repository.loadFromNetworkWithCallback(callback = any()) } coAnswers {
+            // first argument, callback - as any()
+            val callback = arg<suspend (String)-> Unit>(0)
+            callback(myNetworkResponse)
+        }
+
+        // result that callback loads as parameter for onResult
+        var result = ""
+        withCallbackUseCase{ networkResponse ->
+            result = networkResponse
+        }
+
+        Assert.assertEquals(myNetworkResponse, result)
+
     }
 
 

@@ -39,4 +39,11 @@ class StringsListRepositoryImpl(private val database: MyDb = MyDb) : StringsList
         delay(1000)
         //callback()
     }
+
+    override suspend fun loadFromNetworkWithCallback(callback: suspend (String) -> Unit) {
+        withContext(Dispatchers.IO) {
+            val networkResponse = "hello from here"
+            callback(networkResponse)
+        }
+    }
 }
