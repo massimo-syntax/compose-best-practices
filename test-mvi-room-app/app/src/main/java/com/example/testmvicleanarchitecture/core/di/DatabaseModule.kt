@@ -2,8 +2,8 @@ package com.example.testmvicleanarchitecture.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.testmvicleanarchitecture.data.local.NoteDatabase
-import com.example.testmvicleanarchitecture.data.local.dao.NoteDao
+import com.example.testmvicleanarchitecture.core.data.local.NoteDatabase
+import com.example.testmvicleanarchitecture.core.data.local.dao.NoteDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

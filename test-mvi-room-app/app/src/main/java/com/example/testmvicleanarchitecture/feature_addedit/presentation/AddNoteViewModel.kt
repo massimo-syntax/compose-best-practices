@@ -71,6 +71,14 @@ class AddNoteViewModel @Inject constructor(
 
     fun loadNote(id: Long) {
         currentNoteId = id
+        if (id == 0L) {
+            _title.value = ""
+            _content.value = ""
+            _colorHex.value = "#F5F5F0"
+            _isPinned.value = false
+            _createdAt.value = System.currentTimeMillis()
+            return
+        }
         viewModelScope.launch {
             repository.getNoteById(id)?.let { note ->
                 _title.value = note.title

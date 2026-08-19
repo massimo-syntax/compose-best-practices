@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -56,7 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.testmvicleanarchitecture.data.local.entity.NoteEntity
 import java.text.SimpleDateFormat
@@ -178,18 +180,13 @@ fun HomeScreen(
                     )
                 }
             } else {
-                LazyVerticalStaggeredGrid(
-                    columns = StaggeredGridCells.Adaptive(minSize = 160.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalItemSpacing = 12.dp,
-                    contentPadding = PaddingValues(bottom = 80.dp),
+                LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(
                         items = uiState.notes,
                         key = { it.id }
                     ) { note ->
-                        // Modifier.animateItem() powers fluid entrance and reorder animations!
                         NoteCard(
                             note = note,
                             onClick = { onNavigateToEditNote(note.id) },
@@ -199,6 +196,7 @@ fun HomeScreen(
                                 fadeInSpec = spring(stiffness = Spring.StiffnessMediumLow),
                                 placementSpec = spring(stiffness = Spring.StiffnessMediumLow)
                             )
+                                .padding(bottom = 16.dp)
                         )
                     }
                 }

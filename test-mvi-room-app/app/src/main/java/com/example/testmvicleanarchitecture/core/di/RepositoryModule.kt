@@ -1,7 +1,7 @@
 package com.example.testmvicleanarchitecture.di
 
-import com.example.testmvicleanarchitecture.data.repository.NoteRepository
-import com.example.testmvicleanarchitecture.data.repository.NoteRepositoryImpl
+import com.example.testmvicleanarchitecture.core.data.repository.NoteRepositoryImpl
+import com.example.testmvicleanarchitecture.core.domain.repository.NoteRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

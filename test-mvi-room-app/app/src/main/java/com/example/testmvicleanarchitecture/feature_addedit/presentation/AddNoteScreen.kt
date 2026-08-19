@@ -50,7 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
@@ -77,9 +77,7 @@ fun AddNoteScreen(
 ) {
     // Initialize noteId in ViewModel if passed from Navigation 3 AddNoteKey
     LaunchedEffect(noteId) {
-        if (noteId > 0L) {
-            viewModel.loadNote(noteId)
-        }
+        if (noteId != 0L) viewModel.loadNote(noteId)
     }
 
     // Collect StateFlow from ViewModel with lifecycle awareness
@@ -255,6 +253,7 @@ fun AddNoteScreen(
                     fontWeight = FontWeight.Normal
                 ),
                 cursorBrush = SolidColor(contentTextColor),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 decorationBox = { innerTextField ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         if (uiState.content.isEmpty()) {
