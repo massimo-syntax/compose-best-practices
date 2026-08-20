@@ -1,13 +1,12 @@
-package com.example.testmvicleanarchitecture.ui.home
+package com.example.testmvicleanarchitecture.feature_home.presentation
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,9 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,10 +35,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,7 +44,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,10 +57,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.testmvicleanarchitecture.data.local.entity.NoteEntity
+import com.example.testmvicleanarchitecture.core.domain.model.Note
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.core.graphics.toColorInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,20 +72,17 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val listState = rememberLazyListState()
 
-    LaunchedEffect(uiState.userMessage) {
-        uiState.userMessage?.let { message ->
-            val result = snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = if (message == "Note deleted") "UNDO" else null,
-                duration = SnackbarDuration.Short
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                viewModel.undoDelete()
-            }
-            viewModel.userMessageShown()
+    var previousNoteCount by remember { mutableIntStateOf(uiState.notes.size) }
+    // scroll to top when a new note is added
+    LaunchedEffect(uiState.notes.size) {
+        if (uiState.notes.size > previousNoteCount) {
+            listState.scrollToItem(0)
         }
+        previousNoteCount = uiState.notes.size
     }
+
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -122,7 +117,8 @@ fun HomeScreen(
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
+        modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -133,7 +129,7 @@ fun HomeScreen(
             // Search Bar
             OutlinedTextField(
                 value = uiState.searchQuery,
-                onValueChange = viewModel::onSearchQueryChange,
+                onValueChange = { viewModel.action(HomeAction.SearchQueryChange(it)) } ,
                 placeholder = { Text("Search your notes...") },
                 leadingIcon = {
                     Icon(
@@ -143,7 +139,7 @@ fun HomeScreen(
                 },
                 trailingIcon = {
                     AnimatedVisibility(visible = uiState.searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.onSearchQueryChange("") }) {
+                        IconButton(onClick = { viewModel.action(HomeAction.SearchQueryChange("")) }) {
                             Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
                         }
                     }
@@ -181,6 +177,7 @@ fun HomeScreen(
                 }
             } else {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(
@@ -190,12 +187,10 @@ fun HomeScreen(
                         NoteCard(
                             note = note,
                             onClick = { onNavigateToEditNote(note.id) },
-                            onDelete = { viewModel.onDeleteNote(note) },
-                            onTogglePin = { viewModel.onTogglePin(note) },
-                            modifier = Modifier.animateItem(
-                                fadeInSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                                placementSpec = spring(stiffness = Spring.StiffnessMediumLow)
-                            )
+                            onDelete = { viewModel.action(HomeAction.Delete(note)) },
+                            onTogglePin = { viewModel.action(HomeAction.TogglePin(note)) },
+                            modifier = Modifier
+                                .animateItem()
                                 .padding(bottom = 16.dp)
                         )
                     }
@@ -207,7 +202,7 @@ fun HomeScreen(
 
 @Composable
 fun NoteCard(
-    note: NoteEntity,
+    note: Note,
     onClick: () -> Unit,
     onDelete: () -> Unit,
     onTogglePin: () -> Unit,
@@ -215,7 +210,7 @@ fun NoteCard(
 ) {
     val cardColor = remember(note.colorHex) {
         try {
-            Color(android.graphics.Color.parseColor(note.colorHex))
+            Color(note.colorHex.toColorInt())
         } catch (e: Exception) {
             Color(0xFF1E293B)
         }

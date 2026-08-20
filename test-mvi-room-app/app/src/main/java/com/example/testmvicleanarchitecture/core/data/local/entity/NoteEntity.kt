@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.data.local.entity
+package com.example.testmvicleanarchitecture.core.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

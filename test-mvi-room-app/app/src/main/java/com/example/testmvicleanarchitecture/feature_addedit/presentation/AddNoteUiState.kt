@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.ui.add_edit
+package com.example.testmvicleanarchitecture.feature_addedit.presentation
 
 data class AddNoteUiState(
     val id: Long = 0L,
@@ -7,7 +7,5 @@ data class AddNoteUiState(
     val colorHex: String = "#F5F5F0",
     val isPinned: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
-    val isSaving: Boolean = false,
-    val isSaved: Boolean = false,
     val errorMessage: String? = null
 )

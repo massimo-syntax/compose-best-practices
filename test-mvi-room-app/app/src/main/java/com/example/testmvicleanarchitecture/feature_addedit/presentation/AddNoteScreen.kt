@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.ui.add_edit
+package com.example.testmvicleanarchitecture.feature_addedit.presentation
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -73,13 +72,12 @@ val PRESET_COLORS = listOf(
 fun AddNoteScreen(
     noteId: Long = 0L,
     onNavigateBack: () -> Unit,
-    viewModel: AddNoteViewModel = hiltViewModel()
+    viewModel: AddNoteViewModel = hiltViewModel(
+        creationCallback = { factory: AddNoteViewModel.Factory ->
+            factory.create(noteId)
+        }
+    )
 ) {
-    // Initialize noteId in ViewModel if passed from Navigation 3 AddNoteKey
-    LaunchedEffect(noteId) {
-        if (noteId != 0L) viewModel.loadNote(noteId)
-    }
-
     // Collect StateFlow from ViewModel with lifecycle awareness
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,18 +100,10 @@ fun AddNoteScreen(
         SimpleDateFormat("MMMM dd, yyyy • HH:mm", Locale.getDefault()).format(Date(uiState.createdAt))
     }
 
-    // React to one-shot UI Events from ViewModel
-    LaunchedEffect(Unit) {
-        viewModel.eventFlow.collectLatest { event ->
-            when (event) {
-                is AddNoteViewModel.UiEvent.SaveNoteSuccess -> {
-                    // Successfully saved to Room DB -> pop backStack to HomeScreen
-                    onNavigateBack()
-                }
-                is AddNoteViewModel.UiEvent.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(event.message)
-                }
-            }
+    // Handle error messages
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
         }
     }
 
@@ -142,7 +132,7 @@ fun AddNoteScreen(
                         )
                     }
                     // Save Button: writes to Room and pops back to HomeScreen
-                    IconButton(onClick = viewModel::saveNote) {
+                    IconButton(onClick = { viewModel.saveNote { onNavigateBack() } }) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Save Note",

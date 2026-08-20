@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.ui.navigation
+package com.example.testmvicleanarchitecture.core.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

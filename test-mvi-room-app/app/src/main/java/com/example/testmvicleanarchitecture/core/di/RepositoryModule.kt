@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.di
+package com.example.testmvicleanarchitecture.core.di
 
 import com.example.testmvicleanarchitecture.core.data.repository.NoteRepositoryImpl
 import com.example.testmvicleanarchitecture.core.domain.repository.NoteRepository

@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.di
+package com.example.testmvicleanarchitecture.core.di
 
 import dagger.Module
 import dagger.Provides

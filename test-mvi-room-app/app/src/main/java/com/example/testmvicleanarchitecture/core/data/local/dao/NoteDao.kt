@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.data.local.dao
+package com.example.testmvicleanarchitecture.core.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,18 +6,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.testmvicleanarchitecture.data.local.entity.NoteEntity
-import kotlinx.coroutines.flow.Flow
-
+import com.example.testmvicleanarchitecture.core.data.local.entity.NoteEntity
 
 @Dao
 interface NoteDao {
 
     @Query("SELECT * FROM notes ORDER BY is_pinned DESC, created_at DESC")
-    fun getAllNotes(): Flow<List<NoteEntity>>
+    suspend fun getAllNotes(): List<NoteEntity>
 
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%' ORDER BY is_pinned DESC, created_at DESC")
-    fun searchNotes(query: String): Flow<List<NoteEntity>>
+    suspend fun searchNotes(query: String): List<NoteEntity>
 
     @Query("SELECT * FROM notes WHERE id = :id LIMIT 1")
     suspend fun getNoteById(id: Long): NoteEntity?

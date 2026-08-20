@@ -1,11 +1,9 @@
-package com.example.testmvicleanarchitecture.ui.home
+package com.example.testmvicleanarchitecture.feature_home.presentation
 
-import com.example.testmvicleanarchitecture.data.local.entity.NoteEntity
-
+import com.example.testmvicleanarchitecture.core.domain.model.Note
 
 data class HomeUiState(
-    val notes: List<NoteEntity> = emptyList(),
+    val notes: List<Note> = emptyList(),
     val searchQuery: String = "",
-    val isLoading: Boolean = false,
-    val userMessage: String? = null
+    val isLoading: Boolean = false
 )

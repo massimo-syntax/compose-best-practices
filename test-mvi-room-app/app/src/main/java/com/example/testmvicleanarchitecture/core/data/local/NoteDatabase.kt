@@ -1,9 +1,9 @@
-package com.example.testmvicleanarchitecture.data.local
+package com.example.testmvicleanarchitecture.core.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.testmvicleanarchitecture.data.local.dao.NoteDao
-import com.example.testmvicleanarchitecture.data.local.entity.NoteEntity
+import com.example.testmvicleanarchitecture.core.data.local.dao.NoteDao
+import com.example.testmvicleanarchitecture.core.data.local.entity.NoteEntity
 
 
 @Database(

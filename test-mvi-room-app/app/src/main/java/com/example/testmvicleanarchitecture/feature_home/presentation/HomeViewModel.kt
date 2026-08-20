@@ -1,56 +1,36 @@
-package com.example.testmvicleanarchitecture.ui.home
+package com.example.testmvicleanarchitecture.feature_home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testmvicleanarchitecture.data.local.entity.NoteEntity
-import com.example.testmvicleanarchitecture.data.repository.NoteRepository
+import com.example.testmvicleanarchitecture.core.domain.model.Note
+import com.example.testmvicleanarchitecture.core.domain.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: NoteRepository
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
-    private val _recentlyDeletedNote = MutableStateFlow<NoteEntity?>(null)
-    private val _userMessage = MutableStateFlow<String?>(null)
+    private val _notes = MutableStateFlow<List<Note>>(emptyList())
+    private val _isLoading = MutableStateFlow(false)
 
-    /**
-     * Reactive notes stream from repository.
-     * Switches between search and full list dynamically based on search query Flow.
-     */
-    private val _notesFlow = _searchQuery.flatMapLatest { query ->
-        if (query.isBlank()) {
-            repository.getAllNotes()
-        } else {
-            repository.searchNotes(query.trim())
-        }
-    }
-
-    /**
-     * Main StateFlow exposed to Compose via collectAsStateWithLifecycle().
-     * Uses SharingStarted.WhileSubscribed(5_000) to stop upstream collection when app is in background.
-     */
     val uiState: StateFlow<HomeUiState> = combine(
-        _notesFlow,
+        _notes,
         _searchQuery,
-        _userMessage
-    ) { notes, query, message ->
+        _isLoading
+    ) { notes, query, loading ->
         HomeUiState(
             notes = notes,
             searchQuery = query,
-            isLoading = false,
-            userMessage = message
+            isLoading = loading
         )
     }.stateIn(
         scope = viewModelScope,
@@ -58,34 +38,54 @@ class HomeViewModel @Inject constructor(
         initialValue = HomeUiState(isLoading = true)
     )
 
-    fun onSearchQueryChange(query: String) {
+    init {
+        loadNotes()
+    }
+
+    private fun loadNotes() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val query = _searchQuery.value
+            val result = if (query.isBlank()) {
+                repository.getAllNotes()
+            } else {
+                repository.searchNotes(query.trim())
+            }
+            _notes.value = result
+            _isLoading.value = false
+        }
+    }
+
+    fun action(action: HomeAction) {
+        when (action) {
+            is HomeAction.Delete -> {
+                onDeleteNote(action.note)
+            }
+            is HomeAction.TogglePin -> {
+                onTogglePin(action.note)
+            }
+            is HomeAction.SearchQueryChange -> {
+                onSearchQueryChange(action.query)
+            }
+        }
+    }
+
+    private fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
+        loadNotes()
     }
 
-    fun onDeleteNote(note: NoteEntity) {
+    private fun onDeleteNote(note: Note) {
         viewModelScope.launch {
-            _recentlyDeletedNote.value = note
             repository.deleteNote(note)
-            _userMessage.value = "Note deleted"
+            loadNotes()
         }
     }
 
-    fun undoDelete() {
-        val noteToRestore = _recentlyDeletedNote.value ?: return
-        viewModelScope.launch {
-            repository.saveNote(noteToRestore.copy(id = 0L))
-            _recentlyDeletedNote.value = null
-            _userMessage.value = "Note restored"
-        }
-    }
-
-    fun onTogglePin(note: NoteEntity) {
+    private fun onTogglePin(note: Note) {
         viewModelScope.launch {
             repository.togglePin(note.id, !note.isPinned)
+            loadNotes()
         }
-    }
-
-    fun userMessageShown() {
-        _userMessage.value = null
     }
 }

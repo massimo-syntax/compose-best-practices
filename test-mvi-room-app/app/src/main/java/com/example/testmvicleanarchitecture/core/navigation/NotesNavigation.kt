@@ -1,4 +1,4 @@
-package com.example.testmvicleanarchitecture.ui.navigation
+package com.example.testmvicleanarchitecture.core.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
