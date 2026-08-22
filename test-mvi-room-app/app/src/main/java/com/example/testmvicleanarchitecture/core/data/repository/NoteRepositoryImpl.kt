@@ -7,6 +7,9 @@ import com.example.testmvicleanarchitecture.core.domain.model.toNoteEntity
 import com.example.testmvicleanarchitecture.core.domain.model.toNoteList
 import com.example.testmvicleanarchitecture.core.domain.repository.NoteRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +24,12 @@ class NoteRepositoryImpl @Inject constructor(
         return withContext(ioDispatcher) {
             noteDao.getAllNotes().toNoteList()
         }
+    }
+
+    override fun getAllNotesFlow(): Flow<List<Note>> {
+        return noteDao.getAllNotesFlow()
+            .map { it.toNoteList() }
+            .flowOn(ioDispatcher)
     }
 
     override suspend fun searchNotes(query: String): List<Note> {

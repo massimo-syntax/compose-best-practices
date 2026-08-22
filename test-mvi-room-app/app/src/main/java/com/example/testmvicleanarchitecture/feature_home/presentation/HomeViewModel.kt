@@ -19,42 +19,29 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
-    private val _notes = MutableStateFlow<List<Note>>(emptyList())
-    private val _isLoading = MutableStateFlow(false)
 
     val uiState: StateFlow<HomeUiState> = combine(
-        _notes,
-        _searchQuery,
-        _isLoading
-    ) { notes, query, loading ->
+        repository.getAllNotesFlow(),
+        _searchQuery
+    ) { notes, query ->
+        val filteredNotes = if (query.isBlank()) {
+            notes
+        } else {
+            notes.filter { 
+                it.title.contains(query, ignoreCase = true) || 
+                it.content.contains(query, ignoreCase = true) 
+            }
+        }
         HomeUiState(
-            notes = notes,
+            notes = filteredNotes,
             searchQuery = query,
-            isLoading = loading
+            isLoading = false
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = HomeUiState(isLoading = true)
     )
-
-    init {
-        loadNotes()
-    }
-
-    private fun loadNotes() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            val query = _searchQuery.value
-            val result = if (query.isBlank()) {
-                repository.getAllNotes()
-            } else {
-                repository.searchNotes(query.trim())
-            }
-            _notes.value = result
-            _isLoading.value = false
-        }
-    }
 
     fun action(action: HomeAction) {
         when (action) {
@@ -72,20 +59,17 @@ class HomeViewModel @Inject constructor(
 
     private fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
-        loadNotes()
     }
 
     private fun onDeleteNote(note: Note) {
         viewModelScope.launch {
             repository.deleteNote(note)
-            loadNotes()
         }
     }
 
     private fun onTogglePin(note: Note) {
         viewModelScope.launch {
             repository.togglePin(note.id, !note.isPinned)
-            loadNotes()
         }
     }
 }
