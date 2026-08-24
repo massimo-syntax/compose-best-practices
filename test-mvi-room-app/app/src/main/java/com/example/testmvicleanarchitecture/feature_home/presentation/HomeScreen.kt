@@ -55,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.testmvicleanarchitecture.core.domain.model.Note
@@ -71,6 +72,23 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    
+    HomeScreenContent(
+        uiState = uiState,
+        onAction = viewModel::action,
+        onNavigateToAddNote = onNavigateToAddNote,
+        onNavigateToEditNote = onNavigateToEditNote
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenContent(
+    uiState: HomeUiState,
+    onAction: (HomeAction) -> Unit,
+    onNavigateToAddNote: () -> Unit,
+    onNavigateToEditNote: (Long) -> Unit
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
 
@@ -129,7 +147,7 @@ fun HomeScreen(
             // Search Bar
             OutlinedTextField(
                 value = uiState.searchQuery,
-                onValueChange = { viewModel.action(HomeAction.SearchQueryChange(it)) } ,
+                onValueChange = { onAction(HomeAction.SearchQueryChange(it)) } ,
                 placeholder = { Text("Search your notes...") },
                 leadingIcon = {
                     Icon(
@@ -139,7 +157,7 @@ fun HomeScreen(
                 },
                 trailingIcon = {
                     AnimatedVisibility(visible = uiState.searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.action(HomeAction.SearchQueryChange("")) }) {
+                        IconButton(onClick = { onAction(HomeAction.SearchQueryChange("")) }) {
                             Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
                         }
                     }
@@ -162,7 +180,9 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        modifier = Modifier.testTag("loading_indicator")
+                    )
                 }
             } else if (uiState.notes.isEmpty()) {
                 Box(
@@ -187,8 +207,8 @@ fun HomeScreen(
                         NoteCard(
                             note = note,
                             onClick = { onNavigateToEditNote(note.id) },
-                            onDelete = { viewModel.action(HomeAction.Delete(note)) },
-                            onTogglePin = { viewModel.action(HomeAction.TogglePin(note)) },
+                            onDelete = { onAction(HomeAction.Delete(note)) },
+                            onTogglePin = { onAction(HomeAction.TogglePin(note)) },
                             modifier = Modifier
                                 .animateItem()
                                 .padding(bottom = 16.dp)

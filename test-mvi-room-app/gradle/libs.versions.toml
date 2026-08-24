@@ -10,12 +10,13 @@ activityCompose = "1.13.0"
 kotlin = "2.4.10"
 composeBom = "2026.08.00"
 materialIconsExtended = "1.7.8"
+googleTruth = "1.4.5"
 room = "2.8.4"
 navigation3 = "1.1.6"
 kotlinxSerializationCore = "1.11.0"
 ksp = "2.3.11"
 hilt = "2.60.1"
-turbine = "1.2.0"
+turbine = "1.2.1"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -48,6 +49,7 @@ kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 androidx-hilt-lifecycle-viewmodel-compose = { module = "androidx.hilt:hilt-lifecycle-viewmodel-compose", version.ref = "hiltLifecycleViewmodelCompose" }
+google-truth = { module = "com.google.truth:truth", version.ref = "googleTruth" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]

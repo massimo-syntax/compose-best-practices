@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.viewmodel)
     implementation(libs.kotlinx.serialization.core)
-    //implementation(libs.kotlinx.serialization.json)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -73,13 +72,17 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    // assert variables in end-to-end tests
+    // actually junit was already used for compose test rules, so it could be even better.
+    // in every case that can help in my life-goal that is to know everything about software.
+    androidTestImplementation(libs.google.truth)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     // integration tests
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
-    testImplementation("com.google.truth:truth:1.4.5")
+    testImplementation(libs.google.truth)
     // Turbine for testing Kotlin Flows reactively
     testImplementation(libs.turbine)
 }
