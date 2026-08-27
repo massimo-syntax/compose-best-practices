@@ -1,71 +1,46 @@
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.DetektCreateBaselineTask
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     // detekt
-    alias(libs.plugins.ktlint)
-    alias(libs.plugins.detekt.plugin)
-}
-ktlint {
-    android.set(true)
-    ignoreFailures.set(false)
-    reporters {
-        reporter(ReporterType.PLAIN)
-        reporter(ReporterType.SARIF)
-        reporter(ReporterType.CHECKSTYLE)
-    }
-}
-tasks.getByPath("preBuild").dependsOn("ktlintFormat")
-
-detekt {
-    buildUponDefaultConfig = true
-    allRules = false
-    config.setFrom("$projectDir/detekt.yml")
+    id("dev.detekt")
 }
 tasks.withType<Detekt>().configureEach {
     reports {
-        html.required.set(true)
-        xml.required.set(true)
-        sarif.required.set(true)
-        md.required.set(true)
+        checkstyle.required.set(true)
+        markdown.required.set(true)
     }
 }
 
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+    //config.setFrom("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    //baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
+    config.setFrom("../config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    baseline = file("../config/baseline.xml") // a way of suppressing issues before introducing detekt
+
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        html.required.set(true) // observe findings in your browser with structure and code snippets
+        checkstyle.required.set(true) // checkstyle(xml) like format mainly for integrations like Jenkins
+        sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with GitHub Code Scanning
+        markdown.required.set(true) // simple Markdown format
+    }
+}
+
+// Kotlin DSL
 tasks.withType<Detekt>().configureEach {
     jvmTarget = "1.8"
 }
 tasks.withType<DetektCreateBaselineTask>().configureEach {
     jvmTarget = "1.8"
 }
-tasks.register<Detekt>("detektFormat") {
-    description = "Applies formatting rules from detekt"
-    group = "formatting"
-    setSource(files("src/main/kotlin", "src/test/kotlin"))
-    config.setFrom("$projectDir/detekt.yml")
-    autoCorrect = true
-}
-tasks.withType<Detekt>().configureEach {
-    reports {
-        html {
-            required.set(true)
-            outputLocation.set(file("build/reports/detekt.html"))
-        }
-        sarif {
-            required.set(true)
-            outputLocation.set(file("build/reports/detekt.sarif"))
-        }
-        custom {
-            reportId = "CustomJsonReport"
-            outputLocation.set(file("build/reports/detekt-custom.json"))
-        }
-    }
-}
-
-
-
 android {
     namespace = "com.example.detektlint"
     compileSdk {
@@ -116,8 +91,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
 
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-rules-ktlint-wrapper:1.23.8")
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-rules-libraries:1.23.8")
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-rules-ruleauthors:1.23.8")
+    implementation("dev.detekt:detekt-api:2.0.0-alpha.6")
+    detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.6")
+
+
 
 }

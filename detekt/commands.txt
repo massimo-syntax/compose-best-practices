@@ -1,0 +1,5 @@
+└─# ./gradlew detektGenerateConfig
+generates the detekt.yaml file at given location specified in :app gradle module
+
+└─# ./gradlew detekt
+creates report in :app/build/reports/detekt

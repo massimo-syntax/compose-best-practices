@@ -11,7 +11,7 @@ composeBom = "2026.08.00"
 
 # detekt
 ktlint = "14.2.0"
-detekt = "1.23.8"
+
 
 
 
@@ -36,5 +36,5 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 # detekt
-detekt-plugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+#detekt-plugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
