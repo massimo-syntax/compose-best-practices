@@ -1,4 +1,4 @@
-package com.example.detektlint
+package com.example.module
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

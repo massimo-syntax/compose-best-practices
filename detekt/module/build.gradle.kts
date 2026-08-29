@@ -1,70 +1,39 @@
-
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
-    // detekt
+    alias(libs.plugins.android.library)
     id("dev.detekt")
-    // ktlint
     alias(libs.plugins.ktlint)
 }
 
 android {
-    namespace = "com.example.detektlint"
+    namespace = "com.example.module"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.detektlint"
         minSdk = 24
-        targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    buildTypes {
-        release {
-            optimization {
-                enable = false
-            }
-        }
-    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    buildFeatures {
-        compose = true
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.material)
     testImplementation(libs.junit)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    // detekt
+
     implementation("dev.detekt:detekt-api:2.0.0-alpha.6")
     // detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.6")
 }
-
-
-tasks.getByPath("preBuild").dependsOn("ktlintFormat")
 
 // ktlint configuration
 ktlint {
@@ -84,14 +53,13 @@ ktlint {
     }
 }
 
-// detekt
+// DSETEKT
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
     // config.setFrom("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
     // baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
     config.setFrom("../config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
-    baseline = file("../config/baseline.xml") // a way of suppressing issues before introducing detekt
-    // Fail build on any finding
-    ignoreFailures = false
+    baseline =
+        file("../config/baseline.xml") // a way of suppressing issues before introducing detekt
 }

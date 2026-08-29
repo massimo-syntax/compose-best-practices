@@ -1,0 +1,1 @@
+a backup in just in case if ./gradlew detektGenerateConfig is pressed.

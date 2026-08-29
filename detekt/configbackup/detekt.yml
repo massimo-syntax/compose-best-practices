@@ -16,7 +16,7 @@ config:
   # UnusedPrivateFunction -> Set ignoreAnnotated to include Preview ['Preview', 'PreviewLightDark', 'AppPreviews']
   # TooManyFunctions -> Set ignoreAnnotatedFunctions to ['Preview'] -> detekt may flag files with many composable preview functions
 
-  # some others are just filling the report
+  # - some others are just floating the reports
   # FinalNewline -> many files in a newly created project have no final new line
   # NewLineAtEndOfFile -> many files are at default without
   # ImportOrdering -> lexicographic order not needed
