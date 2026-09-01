@@ -8,12 +8,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.androidapissimple.features.backgroundservice.BackgroundServiceScreen
+import com.example.androidapissimple.features.broadcastreceiver.CustomBroadcastReceiverScreen
+import com.example.androidapissimple.features.broadcastreceiver.StaticBroadcastReceiverScreen
+import com.example.androidapissimple.features.broadcastreceiver.SystemEventBroadcastReceiver
+import com.example.androidapissimple.features.broadcastreceiver.SystemEventBroadcastReceiverScreen
 import com.example.androidapissimple.features.foregroundservice.ForegroundServiceScreen
 
 enum class AppFeature(val title: String) {
     BackgroundService("Background Service"),
     ForegroundService("Foreground Service"),
-    Feature3("Feature 3"),
+    StaticBroadcastReceiver("Static Broadcast Receiver"),
+    SystemEventBroadcastReceiver("System Event Broadcast Receiver"),
+    CustomBroadcastReceiver("Custom Broadcast Receiver"),
     Feature4("Feature 4"),
     Feature5("Feature 5")
 }
@@ -32,8 +38,9 @@ fun MainNavigationScreen() {
             when (selectedFeature) {
                 AppFeature.BackgroundService -> BackgroundServiceScreen()
                 AppFeature.ForegroundService -> ForegroundServiceScreen()
-
-
+                AppFeature.StaticBroadcastReceiver -> StaticBroadcastReceiverScreen(selectedFeature.title)
+                AppFeature.SystemEventBroadcastReceiver -> SystemEventBroadcastReceiverScreen(selectedFeature.title)
+                AppFeature.CustomBroadcastReceiver -> CustomBroadcastReceiverScreen(selectedFeature.title)
                 else -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
                         Text(text = "Content for ${selectedFeature.title}")

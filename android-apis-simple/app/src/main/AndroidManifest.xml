@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
@@ -42,6 +43,31 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="logger_demo" />
         </service>
+        <!-- broadcast receiver exported if expected messages from other apps-->
+        <receiver
+            android:name=".features.broadcastreceiver.StaticBroadcastReceiver"
+            android:exported="true">
+            <!-- intent action name is needed from the os to recognize the intent -->
+            <intent-filter>
+                <action
+                    android:name="anyid.com.example.androidapissimple.features.broadcastreceiver.STATIC_ACTION"
+                    />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".features.broadcastreceiver.SystemEventBroadcastReceiver"
+            android:exported="true">
+            <!-- intent action name is needed from the os to recognize the intent -->
+            <intent-filter>
+                <!-- name: has to be exactly android.intent.action.AIRPLANE_MODE -->
+                <action
+                    android:name="android.intent.action.AIRPLANE_MODE"
+                    />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>
