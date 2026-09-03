@@ -38,6 +38,10 @@ class MainActivity : ComponentActivity() {
                 // this is yet better
                 // SinglePermissionActivityResultContract()
                 // MultiplePermissionsActivityResultContract()
+
+                // activity result contract
+                // full implementation of use cases
+                ManyPermissionsRememberLauncherForActivityResultCompleteScreen()
             }
         }
     }
