@@ -23,6 +23,7 @@ import com.example.androidapissimple.features.backgroundservice.BackgroundServic
 import com.example.androidapissimple.features.broadcastreceiver.CustomBroadcastReceiverScreen
 import com.example.androidapissimple.features.broadcastreceiver.StaticBroadcastReceiverScreen
 import com.example.androidapissimple.features.broadcastreceiver.SystemEventBroadcastReceiverScreen
+import com.example.androidapissimple.features.contentProvider.ContentProviderScreen
 import com.example.androidapissimple.features.filesio.InternalFileStorage
 import com.example.androidapissimple.features.foregroundservice.ForegroundServiceScreen
 
@@ -33,8 +34,7 @@ enum class AppFeature(val title: String) {
     SystemEventBroadcastReceiver("System Event Broadcast Receiver"),
     CustomBroadcastReceiver("Custom Broadcast Receiver"),
     InternalFileStorage("Internal File Storage"),
-    Feature4("Feature 4"),
-    Feature5("Feature 5")
+    ContentProvider("Content Provider Screen"),
 }
 
 @Composable
@@ -55,11 +55,7 @@ fun MainNavigationScreen() {
                 AppFeature.SystemEventBroadcastReceiver -> SystemEventBroadcastReceiverScreen(selectedFeature.title)
                 AppFeature.CustomBroadcastReceiver -> CustomBroadcastReceiverScreen(selectedFeature.title)
                 AppFeature.InternalFileStorage -> InternalFileStorage(selectedFeature.title)
-                else -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-                        Text(text = "Content for ${selectedFeature.title}")
-                    }
-                }
+                AppFeature.ContentProvider -> ContentProviderScreen(selectedFeature.title)
             }
         }
 
