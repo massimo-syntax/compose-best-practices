@@ -26,6 +26,7 @@ import com.example.androidapissimple.features.broadcastreceiver.SystemEventBroad
 import com.example.androidapissimple.features.contentProvider.ContentProviderScreen
 import com.example.androidapissimple.features.filesio.ExternalFileStorageContentResolverScreen
 import com.example.androidapissimple.features.filesio.InternalFileStorage
+import com.example.androidapissimple.features.filesio.StorageAccessFrameworkScreen
 import com.example.androidapissimple.features.foregroundservice.ForegroundServiceScreen
 
 enum class AppFeature(val title: String) {
@@ -36,7 +37,8 @@ enum class AppFeature(val title: String) {
     CustomBroadcastReceiver("Custom Broadcast Receiver"),
     InternalFileStorage("Internal File Storage"),
     ContentProvider("Content Provider Screen"),
-    ExternalFileStorageContentResolver("External File Storage Content Resolver")
+    ExternalFileStorageContentResolver("External File Storage Content Resolver"),
+    StorageAccessFramework("Storage Access Framework")
 }
 
 @Composable
@@ -59,6 +61,7 @@ fun MainNavigationScreen() {
                 AppFeature.InternalFileStorage -> InternalFileStorage(selectedFeature.title)
                 AppFeature.ContentProvider -> ContentProviderScreen(selectedFeature.title)
                 AppFeature.ExternalFileStorageContentResolver -> ExternalFileStorageContentResolverScreen(selectedFeature.title)
+                AppFeature.StorageAccessFramework -> StorageAccessFrameworkScreen(selectedFeature.title)
             }
         }
 
