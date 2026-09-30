@@ -1,20 +1,26 @@
 package com.example.canvas.screen
 
+import android.R
+import android.graphics.Paint
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.canvas.domain.model.ChartData
@@ -31,7 +37,14 @@ fun CanvasSimple(
         Modifier.statusBarsPadding()
     ) {
         Text("thats going to be a canvas")
-        LineChart(chartData)
+        // https://www.youtube.com/watch?v=zde9-P9SUoI&t=150s
+        Surface(
+            Modifier
+            .background(Color.Red)
+            .padding(ChartUtils.CHART_PADDING)
+        ) {
+            LineChart(chartData)
+        }
     }
 }
 
@@ -39,8 +52,7 @@ fun CanvasSimple(
 @Composable
 fun LineChart(chartData: List<ChartData>){
     val height = ChartUtils.DEFAULT_CHART_HEIGHT
-    val paddingX = ChartUtils.CHART_PADDING
-    val paddingY = ChartUtils.CHART_PADDING
+
 
     val tags = chartData.map{ it.tag }
     val values = chartData.map{ it.dataValue.toFloat() }
@@ -60,29 +72,26 @@ fun LineChart(chartData: List<ChartData>){
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
+            .background(color = Color.Green)
             .height(height)
-            .padding(ChartUtils.CHART_PADDING)
     ) {
 
-        val gridHeight = height.toPx()
-        val gridWith = size.width   // entire width
+        val lablesYWidth = 100
+        val lablesBottom = 50
+
+        val gridHeight = height.toPx() - lablesBottom
+        val gridWidth = size.width - lablesYWidth  // entire width
 
         val maxValue = values.maxByOrNull {
             it.toFloat().roundToInt()
         } ?: 0f
 
-        val verticalLinesDistance = (maxValue.toInt() / 100).toFloat()
         //[0,100,200, .... (maxValue=850) 900]
         val valueLabels = getAxisValues(maxValue = maxValue.toInt())
 
-        val xAxisSpacing = gridWith / (values.size-1)
+        val xAxisSpacing = gridWidth / (values.size-1)
         val yAxisSpacing = gridHeight / valueLabels.size-1
 
-        values.forEachIndexed { i, it ->
-            val offsetRight = i * xAxisSpacing
-            val offsetTop = getOffsetTop(it, maxValue, gridHeight)
-            offsets.add(Offset(x = offsetRight, y = offsetTop))
-        }
 
         // draw the vertical lines
         for(i in 0 until chartData.size){
@@ -91,7 +100,7 @@ fun LineChart(chartData: List<ChartData>){
                 color = Color.Black,
                 start = Offset(xOffset, 0f),
                 end = Offset(xOffset, gridHeight),
-                strokeWidth = 2f
+                strokeWidth = 1f
             )
         }
 
@@ -102,14 +111,97 @@ fun LineChart(chartData: List<ChartData>){
             drawLine(
                 color = Color.DarkGray,
                 start = Offset(xOffset, yOffset),
-                end = Offset(gridWith, yOffset),
-                strokeWidth = 2f
+                end = Offset(gridWidth, yOffset),
+                strokeWidth = 1f
+            )
+        }
+        // last line
+        drawLine(
+            color = Color.DarkGray,
+            start = Offset(0f, gridHeight),
+            end = Offset(gridWidth, gridHeight),
+            strokeWidth = 1f
+        )
+
+        // lables bottom
+        for(i in 0 until chartData.size){
+            val xOffset = xAxisSpacing * i
+            val yOffset = gridHeight + 40
+            drawContext.canvas.nativeCanvas.drawText(
+                tags[i],
+                xOffset,
+                yOffset,
+                Paint().apply{
+                    color = Color.Black.toArgb()
+                    textAlign = Paint.Align.LEFT
+                    textSize = 10.sp.toPx()
+                }
             )
         }
 
+        val labelsReversed = valueLabels.reversed()
+        // lables aside
+        for(i in 0 until valueLabels.size){
+            val xOffset = gridWidth + 10
+            val yOffset = (yAxisSpacing * i) + yAxisSpacing //  last - 0 at bottom
+            drawContext.canvas.nativeCanvas.drawText(
+                labelsReversed[i].toString(),
+                xOffset,
+                yOffset,
+                Paint().apply{
+                    color = Color.Black.toArgb()
+                    textAlign = Paint.Align.LEFT
+                    textSize = 10.sp.toPx()
+                }
+            )
+        }
+
+        // create offsets for the dots
+        values.forEachIndexed { i, it ->
+            val offsetRight = i * xAxisSpacing
+            val offsetTop = getOffsetTop(it, maxValue, gridHeight)
+            offsets.add(Offset(x = offsetRight, y = offsetTop))
+        }
+
+        // draw circles
+        offsets.forEachIndexed { i, it ->
+            drawCircle(
+                color = Color.Blue,
+                radius = 5.dp.toPx(),
+                center = it
+            )
+
+
+            drawContext.canvas.nativeCanvas.drawText(
+                values[i].toString(),
+                it.x,
+                it.y + 15.sp.toPx(),
+                Paint().apply{
+                    color = Color.Black.toArgb()
+                    textAlign = Paint.Align.LEFT
+                    textSize = 10.sp.toPx()
+                }
+            )
+
+        }
+
+
+        // draw lines between dots
+        // draw the horizontal lines
+        for(i in 0 until chartData.size - 1){
+            val startXOffset = offsets[i].x
+            val startYOffset = offsets[i].y
+            val endXOffset = offsets[i+1].x
+            val endYOffset = offsets[i+1].y
+
+            drawLine(
+                color = Color.Cyan,
+                // offsets directly here can be also good
+                start = Offset(startXOffset, startYOffset),
+                end = Offset(endXOffset, endYOffset),
+                strokeWidth = 3f
+            )
+        }
     }
-
-
-
 
 }

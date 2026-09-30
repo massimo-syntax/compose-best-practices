@@ -10,7 +10,7 @@ import kotlin.random.Random
 
 class ChartViewModel : ViewModel() {
 
-    private val _chartData = MutableStateFlow(getRandomEntries(5))
+    private val _chartData = MutableStateFlow(getRandomEntries(10))
     val chartData: StateFlow<List<ChartData>> = _chartData.asStateFlow()
 
     fun refreshChartData(count: Int = 5) {
