@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1087193218720",
+    "project_id": "aiapisfirebaseaisection",
+    "storage_bucket": "aiapisfirebaseaisection.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087193218720:android:694a3275a4c6b28b6993c5",
+        "android_client_info": {
+          "package_name": "com.example.aiapis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqpRnKpZy3XZhiKDAcbyWqgJmRpCipBKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
