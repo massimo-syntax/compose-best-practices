@@ -83,4 +83,16 @@ dependencies {
     // GEN AI - REMOTE API
     implementation("com.google.genai:google-genai-kotlin:1.3.0")
 
+
+    // FIREBASE AI - THE ONLY ONE WORKING
+    // !! requires plugin!!
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
+
+    // Add the dependencies for the Firebase AI Logic and App Check libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-ai")
+    implementation("com.google.firebase:firebase-appcheck-debug")
+
+
 }
