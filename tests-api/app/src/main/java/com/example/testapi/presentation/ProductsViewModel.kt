@@ -8,6 +8,7 @@ import com.example.testapi.domain.Product
 import com.example.testapi.domain.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
@@ -22,7 +23,7 @@ class ProductsViewModel(
         .onStart {
             // don't request again by resubscription to this flow
             // ie rotating the device
-            if(!hasLoadedProducts) {
+            if (!hasLoadedProducts) {
                 _products.value = repository.getProducts()
                 hasLoadedProducts = true
             }
