@@ -8,7 +8,6 @@ import com.example.testapi.data.HttpClientFactory
 import com.example.testapi.data.ProductRepositoryImpl
 import com.example.testapi.data.http_mock_utls.JsonProductsResponse
 import com.example.testapi.domain.ProductRepository
-import com.example.testapi.util.MainDispatcherRule
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -18,17 +17,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ProductsViewModelTest {
 
     private lateinit var viewModel: ProductsViewModel
     private lateinit var repository: ProductRepository
     private lateinit var httpClient: HttpClient
     private val testDispatcher = UnconfinedTestDispatcher()
+
+    private var content = JsonProductsResponse.products
+    private var statusCode = HttpStatusCode.OK
+
+//    or make a small other data class:
+//    private var responseData = HttpResponseData(
+//        content = ProductsResponses.valid,
+//        statusCode = HttpStatusCode.OK
+//    )
 
     @Before
     fun setUp(){
@@ -39,8 +49,8 @@ class ProductsViewModelTest {
                     val relativeUrl = req.url.encodedPath
                     when(relativeUrl) {
                         "/products" -> respond(
-                            content = JsonProductsResponse.products,
-                            status = HttpStatusCode.OK,
+                            content = content,
+                            status = statusCode,
                             headers = headers {
                                 //HttpHeaders.ContentType; ContentType.Application.Json
                                 set("Content-Type", "application/json")
@@ -59,6 +69,11 @@ class ProductsViewModelTest {
         viewModel = ProductsViewModel(repository)
     }
 
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
     @Test
     fun `Successful API call loads the products`() = runBlocking {
         // test state flow using turbine
@@ -72,5 +87,17 @@ class ProductsViewModelTest {
         }
     }
 
+    @Test
+    fun `API error returns empty products list`() = runBlocking {
+        content = "error"
+        statusCode = HttpStatusCode.Forbidden
+
+        viewModel.products.test {
+            val initialProducts = awaitItem()
+            assertThat(initialProducts).isEmpty()
+
+            expectNoEvents()
+        }
+    }
 
 }
