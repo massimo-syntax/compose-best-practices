@@ -1,7 +1,10 @@
 package com.example.testdataflowviewmodelnetwork.presentation.viewmodel
 
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testdataflowviewmodelnetwork.R
+import com.example.testdataflowviewmodelnetwork.domain.result.FetchError
 import com.example.testdataflowviewmodelnetwork.domain.result.FetchResult
 import com.example.testdataflowviewmodelnetwork.domain.usecase.GetProductsUseCase
 import com.example.testdataflowviewmodelnetwork.presentation.state.ProductUiState
@@ -25,10 +28,17 @@ class ProductViewModel(
                     _uiState.value = ProductUiState.Success(result.data)
                 }
                 is FetchResult.Failure -> {
-                    _uiState.value = ProductUiState.Error("Error occurred")
+                    _uiState.value = ProductUiState.Error(result.error.toErrorMessage())
                 }
             }
         }
     }
 
 }
+
+private fun FetchError.toErrorMessage() =
+    when(this){
+        FetchError.NetworkError -> "error"
+        FetchError.ServerError -> "error"
+        FetchError.UnknownError -> "error"
+    }

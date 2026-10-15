@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TestDataFlowViewModelNetwork</string>
+    <string name="fetch_products_error">Error occurred</string>
+    <string name="fetch_error_network">Network error, please check your connection and try again</string>
+    <string name="fetch_error_server">Server error, we are having troubles processing your request, try again</string>
+    <string name="fetch_error_unknown">Unknown Error occurred</string>
 </resources>

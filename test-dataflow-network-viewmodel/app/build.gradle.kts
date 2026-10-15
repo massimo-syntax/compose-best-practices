@@ -57,6 +57,9 @@ dependencies {
     // coroutines test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
 
+    // turbine
+    testImplementation("app.cash.turbine:turbine:1.2.1")
+
 
 
 

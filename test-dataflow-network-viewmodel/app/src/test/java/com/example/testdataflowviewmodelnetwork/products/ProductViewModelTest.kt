@@ -1,6 +1,7 @@
 package com.example.testdataflowviewmodelnetwork.products
 
 import com.example.testdataflowviewmodelnetwork.MainDispatcherRule
+import com.example.testdataflowviewmodelnetwork.R
 import com.example.testdataflowviewmodelnetwork.domain.model.Product
 import com.example.testdataflowviewmodelnetwork.domain.result.FetchError
 import com.example.testdataflowviewmodelnetwork.domain.result.FetchResult
@@ -15,6 +16,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+
+@OptIn(ExperimentalCoroutinesApi::class) // advanceUntilIdle()
 class ProductViewModelTest {
 
     @get:Rule
@@ -31,7 +34,6 @@ class ProductViewModelTest {
         viewModel = ProductViewModel(useCase)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class) // advanceUntilIdle()
     @Test
     fun `emit Loading then Success when useCase succeeds`() = runTest{
         val products = listOf(
@@ -44,12 +46,11 @@ class ProductViewModelTest {
         assertEquals(ProductUiState.Success(products), viewModel.uiState.value)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `emit Loading then Error when useCase fails`() = runTest {
         fakeRepository.result = FetchResult.Failure(FetchError.NetworkError)
         viewModel.fetchProducts()
         advanceUntilIdle()
-        assertEquals(ProductUiState.Error("Error occurred"), viewModel.uiState.value)
+        assertEquals(ProductUiState.Error("error"), viewModel.uiState.value)
     }
 }
