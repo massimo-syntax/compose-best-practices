@@ -1,9 +1,7 @@
 package com.example.testdataflowviewmodelnetwork.presentation.viewmodel
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testdataflowviewmodelnetwork.R
 import com.example.testdataflowviewmodelnetwork.domain.result.FetchError
 import com.example.testdataflowviewmodelnetwork.domain.result.FetchResult
 import com.example.testdataflowviewmodelnetwork.domain.usecase.GetProductsUseCase
