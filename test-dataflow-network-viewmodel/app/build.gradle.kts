@@ -50,12 +50,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
-    testImplementation(libs.junit)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    // ui tests
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    // test compose ui
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
     // coroutines test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
