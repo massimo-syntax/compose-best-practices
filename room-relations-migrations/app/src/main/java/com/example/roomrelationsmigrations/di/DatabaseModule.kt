@@ -3,7 +3,8 @@ package com.example.roomrelationsmigrations.di
 import android.content.Context
 import androidx.room.Room
 import com.example.roomrelationsmigrations.data.AppDatabase
-import com.example.roomrelationsmigrations.data.EmployeeDao
+import com.example.roomrelationsmigrations.data.recordstandard.EmployeeDao
+import com.example.roomrelationsmigrations.data.onetoone.OneToOneDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,12 +24,19 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "employee_database"
-        ).build()
+            "local_database"
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     @Provides
     fun provideEmployeeDao(database: AppDatabase): EmployeeDao {
         return database.employeeDao()
+    }
+
+    @Provides
+    fun provideOneToOneDao(database: AppDatabase): OneToOneDao {
+        return database.oneToOneDao()
     }
 }

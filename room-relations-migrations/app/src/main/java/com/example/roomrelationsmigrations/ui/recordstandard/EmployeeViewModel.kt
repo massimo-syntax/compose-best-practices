@@ -1,9 +1,9 @@
-package com.example.roomrelationsmigrations.ui
+package com.example.roomrelationsmigrations.ui.recordstandard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.roomrelationsmigrations.data.EmployeeDao
-import com.example.roomrelationsmigrations.data.EmployeeEntity
+import com.example.roomrelationsmigrations.data.recordstandard.EmployeeDao
+import com.example.roomrelationsmigrations.data.recordstandard.EmployeeEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

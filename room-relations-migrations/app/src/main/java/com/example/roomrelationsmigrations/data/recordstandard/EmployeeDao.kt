@@ -1,4 +1,4 @@
-package com.example.roomrelationsmigrations.data
+package com.example.roomrelationsmigrations.data.recordstandard
 
 import androidx.room.Dao
 import androidx.room.Delete
