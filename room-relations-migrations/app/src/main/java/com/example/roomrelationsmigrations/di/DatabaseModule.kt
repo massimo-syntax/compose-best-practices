@@ -3,8 +3,10 @@ package com.example.roomrelationsmigrations.di
 import android.content.Context
 import androidx.room.Room
 import com.example.roomrelationsmigrations.data.AppDatabase
-import com.example.roomrelationsmigrations.data.recordstandard.EmployeeDao
+import com.example.roomrelationsmigrations.data.manytomany.ManyToManyDao
+import com.example.roomrelationsmigrations.data.onetomany.OneToManyDao
 import com.example.roomrelationsmigrations.data.onetoone.OneToOneDao
+import com.example.roomrelationsmigrations.data.recordstandard.EmployeeDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +40,15 @@ object DatabaseModule {
     @Provides
     fun provideOneToOneDao(database: AppDatabase): OneToOneDao {
         return database.oneToOneDao()
+    }
+
+    @Provides
+    fun provideOneToManyDao(database: AppDatabase): OneToManyDao {
+        return database.oneToManyDao()
+    }
+
+    @Provides
+    fun provideManyToManyDao(database: AppDatabase): ManyToManyDao {
+        return database.manyToManyDao()
     }
 }
