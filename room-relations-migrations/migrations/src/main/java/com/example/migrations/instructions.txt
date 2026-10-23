@@ -1,0 +1,32 @@
+
+
+very carefully,
+1st, install the room gradle plugin.
+-libs plugins
+    room = {id = "androidx.room", version.ref = "room"}
+-project build.gradle.kts    plugins {
+    alias(libs.plugins.room) apply false
+-:module
+android{
+    ...
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+}
+
+- build, run, use the app for a little while or more than once
+!! just then !!
+
+@Database(
+    ...
+    version = 2, // new version
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
+)
+class Db....
+
+- also modify the Entity model, as in this case with also:
+    @ColumnInfo(defaultValue = "${0L}", name = "created_at")
+    val createdAt: Long = System.currentTimeMillis()
