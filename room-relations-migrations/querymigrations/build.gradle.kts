@@ -8,11 +8,9 @@ plugins {
 }
 
 android {
-    namespace = "com.example.migrations"
-    compileSdk = 37
-
-    room {
-        schemaDirectory("$projectDir/schemas")
+    namespace = "com.example.querymigrations"
+    compileSdk {
+        version = release(37)
     }
 
     defaultConfig {
@@ -24,6 +22,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     buildFeatures {
         compose = true
     }
@@ -31,17 +34,16 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.core.ktx)
+    // viewModel() in composable, here is used hiltViewModel()
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // viewmodel scope
     implementation(libs.androidx.lifecycle.runtime.compose)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
 
     // Room
     implementation(libs.room.runtime)
@@ -52,5 +54,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
 
 }

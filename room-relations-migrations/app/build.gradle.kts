@@ -60,8 +60,10 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
+    //implementation(project(":automigrations"))
+    implementation(project(":querymigrations"))
+
     // migrations module
-    implementation(project(":migrations"))
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

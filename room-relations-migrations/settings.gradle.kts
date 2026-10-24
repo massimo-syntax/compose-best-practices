@@ -18,4 +18,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "RoomRelationsMigrations"
 include(":app")
-include(":migrations")
+include(":automigrations")
+include(":querymigrations")
