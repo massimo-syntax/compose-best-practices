@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "576374504707",
+    "project_id": "fcmsimple-fb13a",
+    "storage_bucket": "fcmsimple-fb13a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576374504707:android:19375105e9a32b8e66fd36",
+        "android_client_info": {
+          "package_name": "com.example.fcm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYQtqovAQg-z5tlW3Wltq7z4obg9OczSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
